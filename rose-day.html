@@ -9,7 +9,7 @@
         body {
             margin: 0;
             padding: 0;
-            height: 100vh;
+            min-height: 100vh;
             background: linear-gradient(135deg, #ffd93d, #ff6b9d, #ffcc02, #ff9ff3);
             background-size: 400% 400%;
             animation: gradientShift 8s ease infinite;
@@ -18,14 +18,38 @@
             justify-content: center;
             align-items: center;
             font-family: 'Poppins', sans-serif;
-            overflow: hidden;
+            overflow-x: hidden;
             color: #fff;
             text-shadow: 2px 2px 4px rgba(0,0,0,0.6);
+            position: relative;
+        }
+        .floating-flowers {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 2;
+        }
+        .flower {
+            position: absolute;
+            font-size: 4em;
+            animation: floatFlower 8s linear infinite;
+            filter: drop-shadow(0 0 15px rgba(255,255,255,0.8));
+        }
+        .rose { 
+            animation-delay: 0s; 
+            animation-duration: 10s;
+            color: #ff4757;
+        }
+        .sunflower { 
+            animation-delay: 2s; 
+            animation-duration: 12s;
+            color: #ffd93d;
         }
         h1 {
             font-family: 'Dancing Script', cursive;
             font-size: 3.5em;
-            margin: 10px 0;
+            margin: 20px 0 10px 0;
             background: linear-gradient(45deg, #ff6b9d, #ff4757, #ff3838, #ffc1cc);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
@@ -35,6 +59,7 @@
             font-weight: 700;
             letter-spacing: 3px;
             position: relative;
+            z-index: 10;
         }
         h1::after {
             content: '🌹💕🌻';
@@ -53,6 +78,7 @@
             text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
             animation: fadeInUp 2s ease-out;
             opacity: 0.95;
+            z-index: 10;
         }
         p.message {
             font-size: 1.7em;
@@ -66,19 +92,14 @@
             border: 2px solid rgba(255,255,255,0.2);
             animation: glowPulse 3s infinite;
             font-weight: 500;
+            max-width: 600px;
+            z-index: 10;
+            position: relative;
         }
         p.message span.kiss {
             font-size: 1.4em;
             animation: kissBounce 1.5s infinite;
         }
-        .flower {
-            font-size: 5.5em;
-            animation: sway 4s ease-in-out infinite;
-            margin: 8px;
-            filter: drop-shadow(0 0 15px rgba(255,255,255,0.8));
-        }
-        .rose { animation-delay: 0.5s; }
-        .sunflower { animation-delay: 1s; }
         
         @keyframes gradientShift {
             0% { background-position: 0% 50%; }
@@ -93,9 +114,21 @@
             0%, 100% { transform: scale(1); }
             50% { transform: scale(1.05); }
         }
-        @keyframes sway {
-            0%, 100% { transform: rotate(-5deg) scale(1); }
-            50% { transform: rotate(5deg) scale(1.08); }
+        @keyframes floatFlower {
+            0% {
+                transform: translateY(100vh) rotate(0deg) scale(0.5);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-20vh) rotate(720deg) scale(1.2);
+                opacity: 0;
+            }
         }
         @keyframes bounce {
             0%, 100% { transform: translateX(-50%) translateY(0); }
@@ -114,32 +147,45 @@
             50% { transform: scale(1.2); }
         }
         .hearts {
-            position: absolute;
+            position: fixed;
             width: 100%;
             height: 100%;
             pointer-events: none;
+            z-index: 1;
         }
     </style>
 </head>
 <body>
     <div class="hearts" id="hearts"></div>
-    
-    <div class="flower rose">🌹</div>
-    <div class="flower sunflower">🌻</div>
+    <div class="floating-flowers" id="floatingFlowers"></div>
     
     <h1>Happy Rose Day, Babeee!</h1>
     <p class="subtitle">But since you like sunflowers...</p>
     
     <p class="message">
-        Here's a rose for the day, <br>
+        Here's a rose for the day🌹, <br>
         and sunflowers for my sunshine! ☀️<br>
-        <span class="kiss">😘😘💋💋💋💋💋💋</span> 💕🌻
+        <span class="kiss">😘😘😘💋💋💋</span> 💕🌻
     </p>
-    
-    <div class="flower sunflower">🌻</div>
-    <div class="flower rose">🌹</div>
 
     <script>
+        // Floating flowers
+        function createFloatingFlower() {
+            const flowers = ['🌹', '🌻'];
+            const isRose = Math.random() > 0.5;
+            const flower = document.createElement('div');
+            flower.className = `flower ${isRose ? 'rose' : 'sunflower'}`;
+            flower.innerHTML = flowers[isRose ? 0 : 1];
+            flower.style.left = Math.random() * 100 + 'vw';
+            flower.style.animationDelay = Math.random() * 3 + 's';
+            document.getElementById('floatingFlowers').appendChild(flower);
+
+            setTimeout(() => {
+                flower.remove();
+            }, 12000);
+        }
+
+        // Floating hearts (original)
         function createHeart() {
             const hearts = ['💖', '💛', '🌹', '🌻', '💕', '✨'];
             const heart = document.createElement('div');
@@ -158,8 +204,11 @@
             }, 6000);
         }
 
+        // Start floating flowers and hearts
+        setInterval(createFloatingFlower, 1500);
         setInterval(createHeart, 300);
 
+        // Add float animation for hearts
         const style = document.createElement('style');
         style.textContent = `
             @keyframes float {
