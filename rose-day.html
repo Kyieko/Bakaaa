@@ -4,52 +4,114 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Happy Rose Day, Babeee! 🌻🌹</title>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Poppins:wght@400;700&display=swap" rel="stylesheet">
     <style>
         body {
             margin: 0;
             padding: 0;
             height: 100vh;
-            background: linear-gradient(135deg, #ffd93d, #ff6b9d, #ffcc02);
+            background: linear-gradient(135deg, #ffd93d, #ff6b9d, #ffcc02, #ff9ff3);
+            background-size: 400% 400%;
+            animation: gradientShift 8s ease infinite;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            font-family: 'Arial', sans-serif;
+            font-family: 'Poppins', sans-serif;
             overflow: hidden;
-            color: #d63031;
-            text-shadow: 1px 1px 2px rgba(255,255,255,0.8);
+            color: #fff;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.6);
         }
         h1 {
-            font-size: 2.8em;
+            font-family: 'Dancing Script', cursive;
+            font-size: 3.5em;
             margin: 10px 0;
-            animation: glow 2s ease-in-out infinite alternate;
-            font-weight: bold;
+            background: linear-gradient(45deg, #ff6b9d, #ff4757, #ff3838, #ffc1cc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            background-size: 300% 300%;
+            animation: rosyGlow 2s ease-in-out infinite alternate, sparkle 3s infinite;
+            font-weight: 700;
+            letter-spacing: 3px;
+            position: relative;
+        }
+        h1::after {
+            content: '🌹💕🌻';
+            position: absolute;
+            bottom: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.6em;
+            animation: bounce 2s infinite;
         }
         .subtitle {
-            font-size: 1.4em;
-            margin: 10px 0 20px 0;
-            font-style: italic;
+            font-family: 'Dancing Script', cursive;
+            font-size: 1.8em;
+            margin: 10px 0 25px 0;
+            color: #fff;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+            animation: fadeInUp 2s ease-out;
+            opacity: 0.95;
         }
         p.message {
-            font-size: 1.6em;
-            margin: 20px 40px;
+            font-size: 1.7em;
+            margin: 20px 50px;
             text-align: center;
-            line-height: 1.4;
+            line-height: 1.5;
+            background: rgba(255,255,255,0.15);
+            padding: 20px 30px;
+            border-radius: 25px;
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255,255,255,0.2);
+            animation: glowPulse 3s infinite;
+            font-weight: 500;
+        }
+        p.message span.kiss {
+            font-size: 1.4em;
+            animation: kissBounce 1.5s infinite;
         }
         .flower {
-            font-size: 5em;
+            font-size: 5.5em;
             animation: sway 4s ease-in-out infinite;
-            margin: 10px;
+            margin: 8px;
+            filter: drop-shadow(0 0 15px rgba(255,255,255,0.8));
         }
         .rose { animation-delay: 0.5s; }
         .sunflower { animation-delay: 1s; }
-        @keyframes glow {
-            from { text-shadow: 1px 1px 2px rgba(255,255,255,0.8), 0 0 20px #ff6b9d; }
-            to { text-shadow: 1px 1px 2px rgba(255,255,255,0.8), 0 0 30px #ffd93d; }
+        
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        @keyframes rosyGlow {
+            from { filter: drop-shadow(0 0 20px #ff6b9d); }
+            to { filter: drop-shadow(0 0 30px #ff4757); }
+        }
+        @keyframes sparkle {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
         }
         @keyframes sway {
             0%, 100% { transform: rotate(-5deg) scale(1); }
-            50% { transform: rotate(5deg) scale(1.05); }
+            50% { transform: rotate(5deg) scale(1.08); }
+        }
+        @keyframes bounce {
+            0%, 100% { transform: translateX(-50%) translateY(0); }
+            50% { transform: translateX(-50%) translateY(-10px); }
+        }
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 0.95; transform: translateY(0); }
+        }
+        @keyframes glowPulse {
+            0%, 100% { box-shadow: 0 0 20px rgba(255,255,255,0.3); }
+            50% { box-shadow: 0 0 40px rgba(255,255,255,0.6); }
+        }
+        @keyframes kissBounce {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.2); }
         }
         .hearts {
             position: absolute;
@@ -65,13 +127,13 @@
     <div class="flower rose">🌹</div>
     <div class="flower sunflower">🌻</div>
     
-    <h1>Happy Rose Day, Babeee! 🌹</h1>
+    <h1>Happy Rose Day, Babeee!</h1>
     <p class="subtitle">But since you like sunflowers...</p>
     
     <p class="message">
         Here's a rose for the day, <br>
         and sunflowers for my sunshine! ☀️<br>
-        😘😘💋💋💋💋💋💋 💕🌻
+        <span class="kiss">😘😘💋💋💋💋💋💋</span> 💕🌻
     </p>
     
     <div class="flower sunflower">🌻</div>
@@ -79,33 +141,34 @@
 
     <script>
         function createHeart() {
-            const hearts = ['💖', '💛', '🌹', '🌻'];
+            const hearts = ['💖', '💛', '🌹', '🌻', '💕', '✨'];
             const heart = document.createElement('div');
             heart.innerHTML = hearts[Math.floor(Math.random() * hearts.length)];
             heart.style.position = 'fixed';
             heart.style.left = Math.random() * 100 + 'vw';
-            heart.style.bottom = '-10px';
-            heart.style.animation = 'float 5s linear infinite';
-            heart.style.fontSize = Math.random() * 25 + 20 + 'px';
+            heart.style.bottom = '-20px';
+            heart.style.animation = 'float 6s linear infinite';
+            heart.style.fontSize = Math.random() * 30 + 20 + 'px';
             heart.style.zIndex = '10';
+            heart.style.filter = 'drop-shadow(0 0 10px rgba(255,255,255,0.8))';
             document.getElementById('hearts').appendChild(heart);
 
             setTimeout(() => {
                 heart.remove();
-            }, 5000);
+            }, 6000);
         }
 
-        setInterval(createHeart, 350);
+        setInterval(createHeart, 300);
 
         const style = document.createElement('style');
         style.textContent = `
             @keyframes float {
                 0% {
-                    transform: translateY(0) rotate(0deg);
+                    transform: translateY(0) rotate(0deg) scale(0.8);
                     opacity: 1;
                 }
                 100% {
-                    transform: translateY(-120vh) rotate(720deg);
+                    transform: translateY(-130vh) rotate(720deg) scale(1.2);
                     opacity: 0;
                 }
             }
