@@ -1,1 +1,553 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🍫 Happy Chocolate Day!</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background: linear-gradient(135deg, #2c1810 0%, #4a2c20 30%, #6d4c41 70%, #8d5524 100%);
+            font-family: 'Arial Black', sans-serif;
+            overflow: hidden;
+            height: 100vh;
+            color: #ffeb99;
+            text-align: center;
+            transition: background 2s ease-in-out;
+        }
+        body.pink-mode {
+            background: linear-gradient(135deg, #ff9ac3 0%, #ffb6c1 30%, #ffc0cb 70%, #ffafbd 100%);
+        }
+        h1 {
+            font-size: 3.2em; margin: 10px 0;
+            background: linear-gradient(45deg, #ff6b35, #f7931e, #ffd700, #ff1493, #ff69b4);
+            background-size: 400% 400%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 0 60px rgba(255,215,0,0.8), 0 0 20px rgba(255,105,180,0.6);
+            animation: rainbow 3s ease-in-out infinite;
+            z-index: 20;
+            position: relative;
+        }
+        @keyframes rainbow {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+        #playButton {
+            position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            background: linear-gradient(145deg, #ff69b4, #ff1493, #ff69b4);
+            background-size: 200% 200%;
+            border: none; width: 180px; height: 180px; border-radius: 50%;
+            cursor: pointer; z-index: 25; display: none;
+            box-shadow: 0 20px 50px rgba(255,105,180,0.6), inset 0 5px 15px rgba(255,255,255,0.3);
+            animation: playButtonPulse 2s ease-in-out infinite;
+            transition: all 0.4s ease;
+        }
+        #playButton:hover {
+            transform: translate(-50%, -50%) scale(1.1);
+            box-shadow: 0 30px 70px rgba(255,105,180,0.8), inset 0 8px 20px rgba(255,255,255,0.4);
+        }
+        .play-triangle {
+            position: absolute; top: 50%; left: 55px; transform: translateY(-50%);
+            width: 0; height: 0; border-left: 40px solid #fff;
+            border-top: 27px solid transparent; border-bottom: 27px solid transparent;
+            filter: drop-shadow(0 2px 8px rgba(0,0,0,0.3));
+            transition: all 0.3s ease;
+        }
+        #playButton:hover .play-triangle { left: 60px; border-left-color: #ffd700; }
+        @keyframes playButtonPulse {
+            0%, 100% { transform: translate(-50%, -50%) scale(1); }
+            50% { transform: translate(-50%, -50%) scale(1.05); }
+        }
+        #ui { position: fixed; top: 0; left: 0; width: 100%; z-index: 20; pointer-events: none; }
+        #score, #lives { 
+            font-size: 1.6em; margin: 12px; 
+            text-shadow: 3px 3px 6px #000, 0 0 20px rgba(255,255,255,0.3);
+            background: rgba(0,0,0,0.3); padding: 10px 20px; border-radius: 25px;
+            display: inline-block; border: 2px solid #ffd700;
+        }
+        #gameArea {
+            position: fixed; top: 95px; left: 0; width: 100vw; height: calc(100vh - 95px);
+            background: linear-gradient(180deg, #3d2b1f 0%, #2c1810 40%, #1a0f0a 100%);
+            overflow: hidden;
+            position: relative;
+            transition: background 2s ease-in-out;
+        }
+        #gameArea.pink-mode {
+            background: linear-gradient(180deg, #ffdde1 0%, #ffc0cb 40%, #ffb6c1 100%);
+        }
+        #gameArea::before {
+            content: '';
+            position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(255,215,0,0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(255,105,180,0.1) 0%, transparent 50%);
+            pointer-events: none;
+            animation: sparkle 4s ease-in-out infinite;
+        }
+        @keyframes sparkle {
+            0%, 100% { opacity: 0.6; }
+            50% { opacity: 1; }
+        }
+        .brown-specks {
+            position: absolute; width: 4px; height: 4px; background: #8b4513;
+            border-radius: 50%; pointer-events: none; animation: floatBrown 20s linear infinite;
+        }
+        @keyframes floatBrown {
+            0% { transform: translateY(100vh) translateX(0); opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { transform: translateY(-100px) translateX(50px); opacity: 0; }
+        }
+        
+        #catMouth {
+            position: absolute; bottom: 40px; width: 120px; height: 85px;
+            left: 50%; transform: translateX(-50%); cursor: pointer; z-index: 10;
+            transition: left 0.08s ease-out;
+        }
+        .cat-glow { 
+            position: absolute; top: -15px; left: -15px; right: -15px; bottom: -15px;
+            background: radial-gradient(circle, rgba(255,192,203,0.6) 0%, rgba(255,105,180,0.4) 50%, transparent 70%);
+            border-radius: 90px; z-index: -1; animation: pulse 1.5s infinite; 
+            box-shadow: 0 0 30px rgba(255,105,180,0.5);
+        }
+        @keyframes pulse { 
+            0%, 100% { opacity: 0.7; transform: scale(1); } 
+            50% { opacity: 1; transform: scale(1.08); } 
+        }
+        
+        .cat-head {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(145deg, #ffdbac 0%, #f4a460 40%, #d2691e 70%, #ff8c00 100%);
+            border-radius: 60px 60px 30px 30px; box-shadow: 
+                0 15px 40px rgba(0,0,0,0.8),
+                inset 0 6px 16px rgba(255,255,255,0.4),
+                0 0 30px rgba(255,192,203,0.3);
+            border: 4px solid #ffd700;
+            position: relative;
+        }
+        .cat-ears {
+            position: absolute; top: -20px; width: 100%; height: 35px;
+        }
+        .ear-left, .ear-right {
+            position: absolute; width: 28px; height: 28px;
+            background: linear-gradient(145deg, #ffdbac, #f4a460, #ff8c00);
+            border-radius: 70% 20% 60% 40%;
+            box-shadow: inset 0 3px 6px rgba(255,255,255,0.6), 0 3px 8px rgba(0,0,0,0.4);
+        }
+        .ear-left { left: 12px; transform: rotate(-20deg); }
+        .ear-right { right: 12px; transform: rotate(20deg); }
+        .cat-inner-mouth {
+            position: absolute; top: 18px; left: 18px; right: 18px; bottom: 18px;
+            background: repeating-linear-gradient(90deg, #ff69b4 0px, #ff69b4 4px, #ff1493 4px, #ff1493 10px);
+            border-radius: 40px 40px 20px 20px;
+            box-shadow: inset 0 2px 8px rgba(255,255,255,0.3);
+        }
+        .tongue {
+            position: absolute; bottom: 8px; left: 50%; transform: translateX(-50%);
+            width: 45px; height: 22px; 
+            background: radial-gradient(ellipse, #ff69b4, #ff1493, #ff69b4);
+            border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+            box-shadow: inset 0 -3px 6px rgba(255,20,147,0.4), 0 2px 6px rgba(0,0,0,0.3);
+            animation: tongueWiggle 3s ease-in-out infinite;
+        }
+        @keyframes tongueWiggle {
+            0%, 100% { transform: translateX(-50%) scale(1); }
+            50% { transform: translateX(-50%) scale(1.05); }
+        }
+        
+        .chocolate { 
+            position: absolute; width: 55px; height: 55px; z-index: 5; cursor: pointer;
+            animation: fall linear infinite; will-change: transform;
+            filter: drop-shadow(0 4px 12px rgba(0,0,0,0.5));
+        }
+        .chocolate-inner {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            border-radius: 12px; display: flex; align-items: center; justify-content: center;
+            font-size: 30px; border: 3px solid rgba(255,255,255,0.4);
+            box-shadow: inset 0 2px 6px rgba(255,255,255,0.2);
+        }
+        .chocolate.good .chocolate-inner { 
+            background: linear-gradient(145deg, #8b4513 0%, #a0522d 40%, #d2691e 70%, #cd853f 100%);
+            box-shadow: 0 10px 30px rgba(139,69,19,0.9), inset 0 2px 6px rgba(255,255,255,0.3);
+        }
+        .chocolate.bomb .chocolate-inner {
+            background: linear-gradient(145deg, #4a148c 0%, #6a1b9a 40%, #9c27b0 70%, #ba68c8 100%);
+            box-shadow: 0 10px 30px rgba(156,39,176,1), inset 0 2px 6px rgba(255,255,255,0.2);
+            animation: bombGlow 0.8s infinite alternate;
+        }
+        @keyframes bombGlow {
+            0% { box-shadow: 0 10px 30px rgba(156,39,176,0.9), 0 0 20px rgba(156,39,176,0.6); }
+            100% { box-shadow: 0 15px 40px rgba(156,39,176,1), 0 0 30px rgba(156,39,176,0.8); }
+        }
+        .bomb .chocolate-inner::after { content: '💣'; }
+        
+        @keyframes fall {
+            0% { top: -70px; transform: rotate(0deg) scale(0.7); }
+            100% { top: 100vh; transform: rotate(720deg) scale(0.9); }
+        }
+        @keyframes explode {
+            0% { transform: scale(1); opacity: 1; }
+            100% { transform: scale(0) rotate(1080deg); opacity: 0; }
+        }
+        .explode { animation: explode 0.6s forwards !important; }
+        
+        @keyframes float {
+            0% { transform: translateY(0) scale(1); opacity: 1; }
+            100% { transform: translateY(-200px) scale(0.7); opacity: 0; }
+        }
+        @keyframes nomNom {
+            0%, 100% { transform: scaleY(1); }
+            50% { transform: scaleY(1.15); }
+        }
+        @keyframes shockNom {
+            0%, 100% { transform: scaleY(0.8) scaleX(1.2); }
+            50% { transform: scaleY(1.35) scaleX(0.85); }
+        }
+        @keyframes shockwave {
+            0% { transform: scale(0.2); opacity: 1; }
+            100% { transform: scale(3.5); opacity: 0; }
+        }
+        
+        #gameOver, #perfectScore {
+            position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            background: linear-gradient(145deg, rgba(74,20,140,0.98), rgba(139,69,19,0.95));
+            padding: 60px; border-radius: 35px; box-shadow: 0 25px 60px rgba(0,0,0,0.95);
+            display: none; z-index: 30; max-width: 90vw; 
+            border: 5px solid #ffd700; border-image: linear-gradient(45deg, #ff6b35, #ffd700, #ff69b4) 1;
+        }
+        #gameOver h2, #perfectScore h2 {
+            font-size: 2em; margin-bottom: 20px; line-height: 1.1;
+            background: linear-gradient(45deg, #ff69b4, #ffd700, #ff1493, #ffc0cb);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 0 30px rgba(255,215,0,0.8);
+            text-align: center;
+            padding: 0 10px;
+            letter-spacing: 1px;
+        }
+        #gameOver p, #perfectScore p {
+            font-size: 1.3em; margin: 15px 0; line-height: 1.4;
+            color: #fff; text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+            font-weight: bold;
+        }
+        button:not(#playButton) {
+            background: linear-gradient(145deg, #ff1744, #d50000, #ff5722); 
+            color: white; border: none; padding: 20px 45px; font-size: 1.5em; 
+            border-radius: 50px; cursor: pointer; margin: 20px; box-shadow: 
+                0 12px 35px rgba(255,23,68,0.6), inset 0 2px 6px rgba(255,255,255,0.2);
+            transition: all 0.3s; font-weight: bold; position: relative; overflow: hidden;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
+        }
+        button:not(#playButton):hover { 
+            transform: translateY(-10px) scale(1.1); 
+            box-shadow: 0 18px 50px rgba(255,23,68,0.8); 
+        }
+        button:not(#playButton):active { transform: translateY(-5px) scale(1.05); }
+        
+        @media (max-width: 600px) {
+            h1 { font-size: 2.4em; } 
+            #catMouth { width: 100px; height: 70px; }
+            .chocolate { width: 45px; height: 45px; } 
+            .chocolate-inner { font-size: 26px; }
+            #score, #lives { font-size: 1.3em; padding: 8px 16px; }
+            #playButton { width: 150px; height: 150px; }
+            .play-triangle { left: 45px; border-left-width: 33px; border-top-width: 22px; border-bottom-width: 22px; }
+            #gameOver h2, #perfectScore h2 { font-size: 1.6em; }
+        }
+    </style>
+</head>
+<body>
+    <button id="playButton" onclick="startGame()"> 
+        <div class="play-triangle"></div>
+    </button>
+    
+    <div id="ui">
+        <h1>🍫 HAPPY CHOCOLATE DAY! 😘</h1>
+        <div id="score">Score: <span id="scoreValue">0</span></div>
+        <div id="lives">❤️❤️❤️ Lives: 3</div>
+    </div>
+    <div id="gameArea">
+        <div id="catMouth">
+            <div class="cat-glow"></div>
+            <div class="cat-head">
+                <div class="cat-ears">
+                    <div class="ear-left"></div>
+                    <div class="ear-right"></div>
+                </div>
+                <div class="cat-inner-mouth">
+                    <div class="tongue"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="gameOver">
+        <h2 id="gameOverTitle">😿 GAME OVER 😿</h2>
+        <p>Final Score: <span id="finalScore">0</span></p>
+        <p id="gameOverMessage">YU SUCK AT THIS Bebey! 🐱💥</p>
+        <button onclick="restartGame()"> MORE CHOCOLATE!🍫</button>
+    </div>
+    <div id="perfectScore">
+        <h2>😻 WOAH WOAH ENOUGH FOR THE DAY! 🐾</h2>
+        <p>I dont have your address 🥲 Please get some good chocolates for yourself 💸</p>
+    </div>
+
+    <script>
+        const gameArea = document.getElementById('gameArea');
+        const catMouth = document.getElementById('catMouth');
+        const scoreEl = document.getElementById('scoreValue');
+        const livesEl = document.getElementById('lives');
+        const gameOverEl = document.getElementById('gameOver');
+        const perfectScoreEl = document.getElementById('perfectScore');
+        const finalScoreEl = document.getElementById('finalScore');
+        const gameOverTitleEl = document.getElementById('gameOverTitle');
+        const gameOverMessageEl = document.getElementById('gameOverMessage');
+        const playButton = document.getElementById('playButton');
+        const body = document.body;
+        const gameAreaEl = gameArea;
+
+        let score = 0, lives = 3, gameActive = false, gameWon = false, pinkMode = false;
+        let chocolates = [];
+        let gameLoopId;
+        let spawnTimer;
+        let catX = 50;
+        let audioContext = null;
+
+        function initAudio() {
+            try { audioContext = new (window.AudioContext || window.webkitAudioContext)(); } catch(e) {}
+        }
+
+        function playNomNom() {
+            if (!audioContext) return;
+            try {
+                const oscillator = audioContext.createOscillator();
+                const gainNode = audioContext.createGain();
+                oscillator.connect(gainNode); gainNode.connect(audioContext.destination);
+                oscillator.frequency.setValueAtTime(800, audioContext.currentTime);
+                oscillator.frequency.exponentialRampToValueAtTime(400, audioContext.currentTime + 0.1);
+                gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.2);
+                oscillator.start(audioContext.currentTime);
+                oscillator.stop(audioContext.currentTime + 0.2);
+            } catch(e) {}
+        }
+
+        function playOuchSound() {
+            if (!audioContext) return;
+            try {
+                const oscillator = audioContext.createOscillator();
+                const gainNode = audioContext.createGain();
+                oscillator.connect(gainNode); gainNode.connect(audioContext.destination);
+                oscillator.frequency.setValueAtTime(200, audioContext.currentTime);
+                oscillator.frequency.exponentialRampToValueAtTime(100, audioContext.currentTime + 0.15);
+                gainNode.gain.setValueAtTime(0.4, audioContext.currentTime);
+                gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.25);
+                oscillator.start(audioContext.currentTime);
+                oscillator.stop(audioContext.currentTime + 0.25);
+            } catch(e) {}
+        }
+
+        function startGame() {
+            playButton.style.display = 'none';
+            gameActive = true;
+            gameLoop();
+            spawnTimer = setInterval(() => createChocolate(Math.random() < 0.12), 1200);
+        }
+
+        function updateCat(e) {
+            if (!gameActive || gameWon) return;
+            const rect = gameArea.getBoundingClientRect();
+            const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+            catX = Math.max(8, Math.min(88, ((clientX - rect.left) / rect.width) * 100));
+            catMouth.style.left = catX + '%';
+        }
+
+        gameArea.addEventListener('mousemove', updateCat);
+        gameArea.addEventListener('touchmove', (e) => { e.preventDefault(); updateCat(e); }, { passive: false });
+
+        function createChocolate(isBomb = false) {
+            if (!gameActive || gameWon || chocolates.length > 8) return;
+            const choco = document.createElement('div');
+            choco.className = `chocolate ${isBomb ? 'bomb' : 'good'}`;
+            const leftPos = Math.random() * 75 + 12;
+            choco.style.left = leftPos + '%';
+            const speed = isBomb ? 2.0 + Math.random() * 0.5 : 2.5 + Math.random() * 0.8;
+            choco.style.animationDuration = speed + 's';
+            const inner = document.createElement('div');
+            inner.className = 'chocolate-inner';
+            choco.appendChild(inner);
+            gameArea.appendChild(choco);
+            const chocoData = { element: choco, left: leftPos, isBomb, 
+                timeout: setTimeout(() => {
+                    if (choco.parentNode && gameActive && !choco.classList.contains('explode') && !gameWon) {
+                        if (!chocoData.isBomb) loseLife();
+                        choco.remove();
+                        chocolates = chocolates.filter(c => c.element !== choco);
+                    }
+                }, speed * 1000 + 100)
+            };
+            chocolates.push(chocoData);
+        }
+
+        function catchChocolate(chocoData) {
+            const choco = chocoData.element;
+            if (!gameActive || gameWon || choco.classList.contains('explode') || !choco.parentNode) return;
+            choco.classList.add('explode');
+            const x = chocoData.left * (gameArea.offsetWidth / 100);
+            
+            if (chocoData.isBomb) {
+                playOuchSound();
+                catMouth.style.animation = 'shockNom 0.4s ease-in-out';
+                lives = Math.max(0, lives - 1);
+                createShockwave(x, 350);
+            } else {
+                playNomNom();
+                catMouth.style.animation = 'nomNom 0.3s ease-in-out';
+                score += 10;
+                scoreEl.textContent = score;
+                
+                if (score >= 250 && !pinkMode) {
+                    pinkMode = true;
+                    body.classList.add('pink-mode');
+                    gameAreaEl.classList.add('pink-mode');
+                    createBrownSpecks();
+                }
+                
+                if (score >= 500) { perfectScoreAchieved(); return; }
+                createParticles(x, 350);
+                createHearts(x, 350);
+            }
+            
+            livesEl.innerHTML = '❤️'.repeat(lives) + ' ⭕'.repeat(3 - lives) + ` Lives: ${lives}`;
+            clearTimeout(chocoData.timeout);
+            setTimeout(() => {
+                if (choco.parentNode) choco.remove();
+                chocolates = chocolates.filter(c => c.element !== choco);
+            }, 600);
+        }
+
+        function createBrownSpecks() {
+            for (let i = 0; i < 30; i++) {
+                setTimeout(() => {
+                    const speck = document.createElement('div');
+                    speck.className = 'brown-specks';
+                    speck.style.left = Math.random() * 100 + '%';
+                    speck.style.animationDuration = (15 + Math.random() * 10) + 's';
+                    speck.style.animationDelay = Math.random() * 5 + 's';
+                    gameArea.appendChild(speck);
+                    setTimeout(() => speck.remove(), 30000);
+                }, i * 200);
+            }
+        }
+
+        function loseLife() {
+            if (gameWon) return;
+            lives--;
+            livesEl.innerHTML = '❤️'.repeat(lives) + ' ⭕'.repeat(3 - lives) + ` Lives: ${lives}`;
+            if (lives <= 0) gameOver();
+        }
+
+        function perfectScoreAchieved() {
+            gameWon = true; gameActive = false;
+            if (spawnTimer) clearInterval(spawnTimer);
+            cancelAnimationFrame(gameLoopId);
+            chocolates.forEach(c => { clearTimeout(c.timeout); if (c.element && c.element.parentNode) c.element.remove(); });
+            chocolates = [];
+            perfectScoreEl.style.display = 'block';
+        }
+
+        function createParticles(x, y) {
+            for (let i = 0; i < 15; i++) {
+                const p = document.createElement('div');
+                p.style.cssText = `position:absolute;left:${x}px;top:${y}px;width:${8+Math.random()*8}px;height:${8+Math.random()*8}px;background:#ffd700;border-radius:50%;pointer-events:none;z-index:15;box-shadow:0 0 10px #ffd700`;
+                const angle = (i / 15) * Math.PI * 2;
+                const dist = 60 + Math.random() * 40;
+                p.style.setProperty('--dx', Math.cos(angle) * dist + 'px');
+                p.style.setProperty('--dy', Math.sin(angle) * dist + 'px');
+                gameArea.appendChild(p);
+                p.style.animation = 'explode 0.8s ease-out forwards';
+                setTimeout(() => p.remove(), 800);
+            }
+        }
+
+        function createHearts(x, y) {
+            for (let i = 0; i < 7; i++) {
+                const heart = document.createElement('div');
+                heart.style.cssText = `position:absolute;left:${x + (Math.random()-0.5)*70}px;top:${y}px;font-size:26px;pointer-events:none;z-index:15;animation:float 2.5s ease-out forwards;animation-delay:${i*0.1}s;text-shadow:0 0 10px #ff69b4`;
+                heart.innerHTML = '💖';
+                gameArea.appendChild(heart);
+                setTimeout(() => heart.remove(), 2500);
+            }
+        }
+
+        function createShockwave(x, y) {
+            const wave = document.createElement('div');
+            wave.style.cssText = `position:absolute;left:${x}px;top:${y}px;width:160px;height:160px;border:4px solid rgba(255,0,0,0.9);border-radius:50%;pointer-events:none;z-index:15;animation:shockwave 0.7s forwards;box-shadow:0 0 20px rgba(255,0,0,0.6)`;
+            gameArea.appendChild(wave);
+            setTimeout(() => wave.remove(), 700);
+        }
+
+        function gameLoop() {
+            if (!gameActive || gameWon) return;
+            for (let i = chocolates.length - 1; i >= 0; i--) {
+                const chocoData = chocolates[i];
+                const choco = chocoData.element;
+                if (!choco.parentNode || choco.classList.contains('explode')) {
+                    chocolates.splice(i, 1); continue;
+                }
+                const catRect = catMouth.getBoundingClientRect();
+                const chocoRect = choco.getBoundingClientRect();
+                if (chocoRect.bottom > catRect.top && chocoRect.bottom < catRect.bottom + 25 &&
+                    chocoRect.right > catRect.left && chocoRect.left < catRect.right &&
+                    Math.abs(chocoData.left - catX) < 12) {
+                    catchChocolate(chocoData);
+                }
+            }
+            gameLoopId = requestAnimationFrame(gameLoop);
+        }
+
+        function gameOver() {
+            if (gameWon) return;
+            gameActive = false;
+            if (spawnTimer) clearInterval(spawnTimer);
+            cancelAnimationFrame(gameLoopId);
+            finalScoreEl.textContent = score;
+            if (score >= 100) {
+                gameOverTitleEl.textContent = '🍫 TOO MUCH CHOCOLATE! 😻';
+                gameOverMessageEl.textContent = 'Time for a nap, cutie! 💕😴';
+            } else {
+                gameOverTitleEl.textContent = '😿 GAME OVER 😿';
+                gameOverMessageEl.textContent = 'U SUCK AT THIS! 🐱💥';
+            }
+            gameOverEl.style.display = 'block';
+        }
+
+        function restartGame() {
+            if (gameWon) return;
+            gameActive = true; gameWon = false;
+            score = 0; lives = 3; pinkMode = false;
+            body.classList.remove('pink-mode');
+            gameAreaEl.classList.remove('pink-mode');
+            chocolates.forEach(c => { clearTimeout(c.timeout); if (c.element && c.element.parentNode) c.element.remove(); });
+            chocolates = [];
+            scoreEl.textContent = 0;
+            livesEl.innerHTML = '❤️❤️❤️ Lives: 3';
+            gameOverEl.style.display = 'none';
+            perfectScoreEl.style.display = 'none';
+            catX = 50;
+            catMouth.style.left = '50%';
+            catMouth.style.animation = '';
+            playButton.style.display = 'block';
+            gameActive = false;
+            gameLoop();
+        }
+
+        window.addEventListener('click', initAudio, { once: true });
+        window.addEventListener('touchstart', initAudio, { once: true });
+        playButton.style.display = 'block';
+    </script>
+</body>
+</html>
 
