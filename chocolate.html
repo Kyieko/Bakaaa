@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>🍫 Happy Chocolate Day!</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -14,12 +14,14 @@
             color: #ffeb99;
             text-align: center;
             transition: background 2s ease-in-out;
+            position: relative;
         }
         body.pink-mode {
             background: linear-gradient(135deg, #ff9ac3 0%, #ffb6c1 30%, #ffc0cb 70%, #ffafbd 100%);
         }
         h1 {
-            font-size: 3.2em; margin: 10px 0;
+            font-size: clamp(1.8em, 6vw, 3.2em); 
+            margin: clamp(5px, 2vh, 10px) 0;
             background: linear-gradient(45deg, #ff6b35, #f7931e, #ffd700, #ff1493, #ff69b4);
             background-size: 400% 400%;
             -webkit-background-clip: text;
@@ -29,6 +31,7 @@
             animation: rainbow 3s ease-in-out infinite;
             z-index: 20;
             position: relative;
+            line-height: 1.1;
         }
         @keyframes rainbow {
             0%, 100% { background-position: 0% 50%; }
@@ -38,7 +41,10 @@
             position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
             background: linear-gradient(145deg, #ff69b4, #ff1493, #ff69b4);
             background-size: 200% 200%;
-            border: none; width: 180px; height: 180px; border-radius: 50%;
+            border: none; 
+            width: clamp(120px, 25vw, 180px); 
+            height: clamp(120px, 25vw, 180px); 
+            border-radius: 50%;
             cursor: pointer; z-index: 25; display: none;
             box-shadow: 0 20px 50px rgba(255,105,180,0.6), inset 0 5px 15px rgba(255,255,255,0.3);
             animation: playButtonPulse 2s ease-in-out infinite;
@@ -49,26 +55,45 @@
             box-shadow: 0 30px 70px rgba(255,105,180,0.8), inset 0 8px 20px rgba(255,255,255,0.4);
         }
         .play-triangle {
-            position: absolute; top: 50%; left: 55px; transform: translateY(-50%);
-            width: 0; height: 0; border-left: 40px solid #fff;
-            border-top: 27px solid transparent; border-bottom: 27px solid transparent;
+            position: absolute; 
+            top: 50%; 
+            left: clamp(35px, 12vw, 55px); 
+            transform: translateY(-50%);
+            width: 0; height: 0; 
+            border-left: clamp(25px, 8vw, 40px) solid #fff;
+            border-top: clamp(18px, 6vw, 27px) solid transparent; 
+            border-bottom: clamp(18px, 6vw, 27px) solid transparent;
             filter: drop-shadow(0 2px 8px rgba(0,0,0,0.3));
             transition: all 0.3s ease;
         }
-        #playButton:hover .play-triangle { left: 60px; border-left-color: #ffd700; }
+        #playButton:hover .play-triangle { 
+            left: clamp(40px, 13vw, 60px); 
+            border-left-color: #ffd700; 
+        }
         @keyframes playButtonPulse {
             0%, 100% { transform: translate(-50%, -50%) scale(1); }
             50% { transform: translate(-50%, -50%) scale(1.05); }
         }
-        #ui { position: fixed; top: 0; left: 0; width: 100%; z-index: 20; pointer-events: none; }
+        #ui { 
+            position: fixed; top: 0; left: 0; width: 100%; z-index: 20; pointer-events: none; 
+            padding: clamp(5px, 2vh, 12px) 0;
+        }
         #score, #lives { 
-            font-size: 1.6em; margin: 12px; 
+            font-size: clamp(1.1em, 4vw, 1.6em); 
+            margin: clamp(8px, 1.5vh, 12px); 
             text-shadow: 3px 3px 6px #000, 0 0 20px rgba(255,255,255,0.3);
-            background: rgba(0,0,0,0.3); padding: 10px 20px; border-radius: 25px;
-            display: inline-block; border: 2px solid #ffd700;
+            background: rgba(0,0,0,0.3); 
+            padding: clamp(6px, 2vw, 10px) clamp(12px, 3vw, 20px); 
+            border-radius: 25px;
+            display: inline-block; 
+            border: 2px solid #ffd700;
         }
         #gameArea {
-            position: fixed; top: 95px; left: 0; width: 100vw; height: calc(100vh - 95px);
+            position: fixed; 
+            top: clamp(70px, 12vh, 95px); 
+            left: 0; 
+            width: 100vw; 
+            height: calc(100vh - clamp(70px, 12vh, 95px));
             background: linear-gradient(180deg, #3d2b1f 0%, #2c1810 40%, #1a0f0a 100%);
             overflow: hidden;
             position: relative;
@@ -91,8 +116,13 @@
             50% { opacity: 1; }
         }
         .brown-specks {
-            position: absolute; width: 4px; height: 4px; background: #8b4513;
-            border-radius: 50%; pointer-events: none; animation: floatBrown 20s linear infinite;
+            position: absolute; 
+            width: clamp(2px, 1vw, 4px); 
+            height: clamp(2px, 1vw, 4px); 
+            background: #8b4513;
+            border-radius: 50%; 
+            pointer-events: none; 
+            animation: floatBrown 20s linear infinite;
         }
         @keyframes floatBrown {
             0% { transform: translateY(100vh) translateX(0); opacity: 0; }
@@ -102,14 +132,23 @@
         }
         
         #catMouth {
-            position: absolute; bottom: 40px; width: 120px; height: 85px;
-            left: 50%; transform: translateX(-50%); cursor: pointer; z-index: 10;
+            position: absolute; 
+            bottom: clamp(20px, 5vh, 40px); 
+            width: clamp(80px, 18vw, 120px); 
+            height: clamp(55px, 12vh, 85px);
+            left: 50%; 
+            transform: translateX(-50%); 
+            cursor: pointer; 
+            z-index: 10;
             transition: left 0.08s ease-out;
         }
         .cat-glow { 
-            position: absolute; top: -15px; left: -15px; right: -15px; bottom: -15px;
+            position: absolute; 
+            top: -15px; left: -15px; right: -15px; bottom: -15px;
             background: radial-gradient(circle, rgba(255,192,203,0.6) 0%, rgba(255,105,180,0.4) 50%, transparent 70%);
-            border-radius: 90px; z-index: -1; animation: pulse 1.5s infinite; 
+            border-radius: 90px; 
+            z-index: -1; 
+            animation: pulse 1.5s infinite; 
             box-shadow: 0 0 30px rgba(255,105,180,0.5);
         }
         @keyframes pulse { 
@@ -120,7 +159,8 @@
         .cat-head {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
             background: linear-gradient(145deg, #ffdbac 0%, #f4a460 40%, #d2691e 70%, #ff8c00 100%);
-            border-radius: 60px 60px 30px 30px; box-shadow: 
+            border-radius: 60px 60px 30px 30px; 
+            box-shadow: 
                 0 15px 40px rgba(0,0,0,0.8),
                 inset 0 6px 16px rgba(255,255,255,0.4),
                 0 0 30px rgba(255,192,203,0.3);
@@ -131,7 +171,9 @@
             position: absolute; top: -20px; width: 100%; height: 35px;
         }
         .ear-left, .ear-right {
-            position: absolute; width: 28px; height: 28px;
+            position: absolute; 
+            width: clamp(18px, 4vw, 28px); 
+            height: clamp(18px, 4vw, 28px);
             background: linear-gradient(145deg, #ffdbac, #f4a460, #ff8c00);
             border-radius: 70% 20% 60% 40%;
             box-shadow: inset 0 3px 6px rgba(255,255,255,0.6), 0 3px 8px rgba(0,0,0,0.4);
@@ -139,14 +181,19 @@
         .ear-left { left: 12px; transform: rotate(-20deg); }
         .ear-right { right: 12px; transform: rotate(20deg); }
         .cat-inner-mouth {
-            position: absolute; top: 18px; left: 18px; right: 18px; bottom: 18px;
+            position: absolute; 
+            top: clamp(12px, 3vw, 18px); 
+            left: clamp(12px, 3vw, 18px); 
+            right: clamp(12px, 3vw, 18px); 
+            bottom: clamp(12px, 3vw, 18px);
             background: repeating-linear-gradient(90deg, #ff69b4 0px, #ff69b4 4px, #ff1493 4px, #ff1493 10px);
             border-radius: 40px 40px 20px 20px;
             box-shadow: inset 0 2px 8px rgba(255,255,255,0.3);
         }
         .tongue {
             position: absolute; bottom: 8px; left: 50%; transform: translateX(-50%);
-            width: 45px; height: 22px; 
+            width: clamp(30px, 7vw, 45px); 
+            height: clamp(15px, 4vh, 22px); 
             background: radial-gradient(ellipse, #ff69b4, #ff1493, #ff69b4);
             border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
             box-shadow: inset 0 -3px 6px rgba(255,20,147,0.4), 0 2px 6px rgba(0,0,0,0.3);
@@ -158,14 +205,20 @@
         }
         
         .chocolate { 
-            position: absolute; width: 55px; height: 55px; z-index: 5; cursor: pointer;
-            animation: fall linear infinite; will-change: transform;
+            position: absolute; 
+            width: clamp(35px, 9vw, 55px); 
+            height: clamp(35px, 9vw, 55px); 
+            z-index: 5; 
+            cursor: pointer;
+            animation: fall linear infinite; 
+            will-change: transform;
             filter: drop-shadow(0 4px 12px rgba(0,0,0,0.5));
         }
         .chocolate-inner {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
             border-radius: 12px; display: flex; align-items: center; justify-content: center;
-            font-size: 30px; border: 3px solid rgba(255,255,255,0.4);
+            font-size: clamp(20px, 6vw, 30px); 
+            border: 3px solid rgba(255,255,255,0.4);
             box-shadow: inset 0 2px 6px rgba(255,255,255,0.2);
         }
         .chocolate.good .chocolate-inner { 
@@ -213,12 +266,19 @@
         #gameOver, #perfectScore {
             position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
             background: linear-gradient(145deg, rgba(74,20,140,0.98), rgba(139,69,19,0.95));
-            padding: 60px; border-radius: 35px; box-shadow: 0 25px 60px rgba(0,0,0,0.95);
-            display: none; z-index: 30; max-width: 90vw; 
-            border: 5px solid #ffd700; border-image: linear-gradient(45deg, #ff6b35, #ffd700, #ff69b4) 1;
+            padding: clamp(30px, 8vh, 60px); 
+            border-radius: 35px; 
+            box-shadow: 0 25px 60px rgba(0,0,0,0.95);
+            display: none; 
+            z-index: 30; 
+            max-width: 90vw; 
+            border: 5px solid #ffd700; 
+            border-image: linear-gradient(45deg, #ff6b35, #ffd700, #ff69b4) 1;
         }
         #gameOver h2, #perfectScore h2 {
-            font-size: 2em; margin-bottom: 20px; line-height: 1.1;
+            font-size: clamp(1.4em, 6vw, 2em); 
+            margin-bottom: clamp(10px, 3vh, 20px); 
+            line-height: 1.1;
             background: linear-gradient(45deg, #ff69b4, #ffd700, #ff1493, #ffc0cb);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
@@ -229,16 +289,29 @@
             letter-spacing: 1px;
         }
         #gameOver p, #perfectScore p {
-            font-size: 1.3em; margin: 15px 0; line-height: 1.4;
-            color: #fff; text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+            font-size: clamp(1.1em, 4vw, 1.3em); 
+            margin: clamp(10px, 2vh, 15px) 0; 
+            line-height: 1.4;
+            color: #fff; 
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
             font-weight: bold;
         }
         button:not(#playButton) {
             background: linear-gradient(145deg, #ff1744, #d50000, #ff5722); 
-            color: white; border: none; padding: 20px 45px; font-size: 1.5em; 
-            border-radius: 50px; cursor: pointer; margin: 20px; box-shadow: 
-                0 12px 35px rgba(255,23,68,0.6), inset 0 2px 6px rgba(255,255,255,0.2);
-            transition: all 0.3s; font-weight: bold; position: relative; overflow: hidden;
+            color: white; 
+            border: none; 
+            padding: clamp(12px, 4vh, 20px) clamp(25px, 8vw, 45px); 
+            font-size: clamp(1.2em, 4vw, 1.5em); 
+            border-radius: 50px; 
+            cursor: pointer; 
+            margin: clamp(10px, 3vh, 20px); 
+            box-shadow: 
+                0 12px 35px rgba(255,23,68,0.6), 
+                inset 0 2px 6px rgba(255,255,255,0.2);
+            transition: all 0.3s; 
+            font-weight: bold; 
+            position: relative; 
+            overflow: hidden;
             text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
         }
         button:not(#playButton):hover { 
@@ -246,16 +319,18 @@
             box-shadow: 0 18px 50px rgba(255,23,68,0.8); 
         }
         button:not(#playButton):active { transform: translateY(-5px) scale(1.05); }
-        
-        @media (max-width: 600px) {
-            h1 { font-size: 2.4em; } 
-            #catMouth { width: 100px; height: 70px; }
-            .chocolate { width: 45px; height: 45px; } 
-            .chocolate-inner { font-size: 26px; }
-            #score, #lives { font-size: 1.3em; padding: 8px 16px; }
-            #playButton { width: 150px; height: 150px; }
-            .play-triangle { left: 45px; border-left-width: 33px; border-top-width: 22px; border-bottom-width: 22px; }
-            #gameOver h2, #perfectScore h2 { font-size: 1.6em; }
+
+        /* Enhanced responsive breakpoints */
+        @media (max-width: 480px) {
+            #ui { padding-top: 2vh; }
+            #gameArea { top: 10vh !important; }
+            #catMouth { bottom: 15px !important; }
+        }
+        @media (max-height: 500px) {
+            #ui { padding: 1vh 0; }
+            #score, #lives { font-size: 1em !important; padding: 4px 8px !important; }
+            #gameArea { top: 8vh !important; }
+            #catMouth { bottom: 10px !important; width: 70px !important; height: 50px !important; }
         }
     </style>
 </head>
@@ -295,6 +370,7 @@
     </div>
 
     <script>
+        // Same JavaScript code - no changes needed
         const gameArea = document.getElementById('gameArea');
         const catMouth = document.getElementById('catMouth');
         const scoreEl = document.getElementById('scoreValue');
@@ -420,7 +496,7 @@
                 createHearts(x, 350);
             }
             
-            livesEl.innerHTML = '❤️'.repeat(lives) + ' ⭕'.repeat(3 - lives) + ` Lives: ${lives}`;
+            livesEl.innerHTML = '❤️'.repeat(lives) + ' ☠️'.repeat(3 - lives) + ` Lives: ${lives}`;
             clearTimeout(chocoData.timeout);
             setTimeout(() => {
                 if (choco.parentNode) choco.remove();
@@ -516,7 +592,7 @@
             finalScoreEl.textContent = score;
             if (score >= 100) {
                 gameOverTitleEl.textContent = '🍫 TOO MUCH CHOCOLATE! 😻';
-                gameOverMessageEl.textContent = 'Take some kisses now 💋';
+                gameOverMessageEl.textContent = 'Take some sweet kisses now 😘💋';
             } else {
                 gameOverTitleEl.textContent = '😿 GAME OVER 😿';
                 gameOverMessageEl.textContent = 'U SUCK AT THIS! 🐱💥';
@@ -550,4 +626,3 @@
     </script>
 </body>
 </html>
-
