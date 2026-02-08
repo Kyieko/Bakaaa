@@ -445,7 +445,7 @@
         function loseLife() {
             if (gameWon) return;
             lives--;
-            livesEl.innerHTML = '❤️'.repeat(lives) + ' ⭕'.repeat(3 - lives) + ` Lives: ${lives}`;
+            livesEl.innerHTML = '❤️'.repeat(lives) + ' ☠️'.repeat(3 - lives) + ` Lives: ${lives}`;
             if (lives <= 0) gameOver();
         }
 
@@ -516,7 +516,7 @@
             finalScoreEl.textContent = score;
             if (score >= 100) {
                 gameOverTitleEl.textContent = '🍫 TOO MUCH CHOCOLATE! 😻';
-                gameOverMessageEl.textContent = 'Time for a nap, cutie! 💕😴';
+                gameOverMessageEl.textContent = 'Take some kisses now 💋';
             } else {
                 gameOverTitleEl.textContent = '😿 GAME OVER 😿';
                 gameOverMessageEl.textContent = 'U SUCK AT THIS! 🐱💥';
