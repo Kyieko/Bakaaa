@@ -174,7 +174,7 @@
 
     <div class="final-state" id="finalState">
         <div class="final-teddy">😒</div>
-        <div id="final-message">😒 ENOUGH HUGS FOR THE TEDDY! 🛑</div>
+        <div id="final-message">😒 ENOUGH HUGS FOR THE TEDDY! ✋</div>
     </div>
 
     <script>
@@ -187,14 +187,14 @@
                 this.finalState = document.getElementById('finalState');
                 
                 this.hugCount = 0;
-                this.maxHugs = 8;  // Changed to 8th tap
+                this.maxHugs = 8;
                 
                 this.wishes = [
                     '🥰 Squeeeeze tight!',
-                    '💋I missss yuuuu Bakaa!',
+                    '💋 I missss yuuuu Bakaa!',
                     '💕 Love you zaa mosttttt!',
                     '😘 Okay now stop!',
-                    '🤤 You're my favorite teddy!',
+                    '🤤 You\'re my favorite teddy!',
                     '🤓💋💋💋🫠🫠🫠❤️😘😘😘😘',
                     '✋ okay now stop',
                     '❌ No more hugs for teddy 🧸'
@@ -272,12 +272,11 @@
                 this.teddy.classList.add('hugging');
                 this.createHeartExplosion();
                 
-                // Reset animation - message stays visible longer
+                // Reset animation
                 setTimeout(() => {
                     this.teddy.classList.remove('hugging');
                     this.message.classList.remove('show');
                     
-                    // Check if max hugs reached
                     if (this.hugCount >= this.maxHugs) {
                         this.showFinalState();
                     }
