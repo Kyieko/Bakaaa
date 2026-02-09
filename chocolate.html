@@ -98,6 +98,7 @@
             overflow: hidden;
             position: relative;
             transition: background 2s ease-in-out;
+            pointer-events: none;
         }
         #gameArea.pink-mode {
             background: linear-gradient(180deg, #ffdde1 0%, #ffc0cb 40%, #ffb6c1 100%);
@@ -141,6 +142,7 @@
             cursor: pointer; 
             z-index: 10;
             transition: left 0.08s ease-out;
+            pointer-events: auto;
         }
         .cat-glow { 
             position: absolute; 
@@ -213,6 +215,7 @@
             animation: fall linear infinite; 
             will-change: transform;
             filter: drop-shadow(0 4px 12px rgba(0,0,0,0.5));
+            pointer-events: auto;
         }
         .chocolate-inner {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
@@ -244,7 +247,7 @@
             0% { transform: scale(1); opacity: 1; }
             100% { transform: scale(0) rotate(1080deg); opacity: 0; }
         }
-        .explode { animation: explode 0.6s forwards !important; }
+        .explode { animation: explode 0.6s forwards !important; pointer-events: none !important; }
         
         @keyframes float {
             0% { transform: translateY(0) scale(1); opacity: 1; }
@@ -362,15 +365,15 @@
         <h2 id="gameOverTitle">😿 GAME OVER 😿</h2>
         <p>Final Score: <span id="finalScore">0</span></p>
         <p id="gameOverMessage">YU SUCK AT THIS Bebey! 🐱💥</p>
-        <button onclick="restartGame()"> NEED MORE!🍫</button>
+        <button onclick="restartGame()">NEED MORE!🍫</button>
     </div>
     <div id="perfectScore">
         <h2>😻 WOAH WOAH ENOUGH CHOCOLATES FOR THE DAY! 💋</h2>
         <p>I dont have your address 🥲 Please get some good chocolates for yourself 💸</p>
+        <button onclick="restartGame()">PLAY AGAIN! 🎮</button>
     </div>
 
     <script>
-        // Same JavaScript code - no changes needed
         const gameArea = document.getElementById('gameArea');
         const catMouth = document.getElementById('catMouth');
         const scoreEl = document.getElementById('scoreValue');
@@ -382,7 +385,6 @@
         const gameOverMessageEl = document.getElementById('gameOverMessage');
         const playButton = document.getElementById('playButton');
         const body = document.body;
-        const gameAreaEl = gameArea;
 
         let score = 0, lives = 3, gameActive = false, gameWon = false, pinkMode = false;
         let chocolates = [];
@@ -425,11 +427,51 @@
             } catch(e) {}
         }
 
+        function stopGame() {
+            gameActive = false;
+            if (spawnTimer) {
+                clearInterval(spawnTimer);
+                spawnTimer = null;
+            }
+            if (gameLoopId) {
+                cancelAnimationFrame(gameLoopId);
+                gameLoopId = null;
+            }
+        }
+
+        function cleanupChocolates() {
+            chocolates.forEach(chocoData => {
+                clearTimeout(chocoData.timeout);
+                if (chocoData.element && chocoData.element.parentNode) {
+                    chocoData.element.remove();
+                }
+            });
+            chocolates = [];
+        }
+
         function startGame() {
             playButton.style.display = 'none';
+            resetGameState();
             gameActive = true;
             gameLoop();
-            spawnTimer = setInterval(() => createChocolate(Math.random() < 0.12), 1200);
+            spawnTimer = setInterval(() => {
+                if (gameActive && !gameWon) {
+                    createChocolate(Math.random() < 0.12);
+                }
+            }, 1200);
+        }
+
+        function resetGameState() {
+            score = 0;
+            lives = 3;
+            pinkMode = false;
+            body.classList.remove('pink-mode');
+            gameArea.classList.remove('pink-mode');
+            scoreEl.textContent = '0';
+            livesEl.innerHTML = '❤️❤️❤️ Lives: 3';
+            catX = 50;
+            catMouth.style.left = '50%';
+            catMouth.style.animation = '';
         }
 
         function updateCat(e) {
@@ -441,35 +483,54 @@
         }
 
         gameArea.addEventListener('mousemove', updateCat);
-        gameArea.addEventListener('touchmove', (e) => { e.preventDefault(); updateCat(e); }, { passive: false });
+        gameArea.addEventListener('touchmove', (e) => { 
+            e.preventDefault(); 
+            updateCat(e); 
+        }, { passive: false });
 
         function createChocolate(isBomb = false) {
             if (!gameActive || gameWon || chocolates.length > 8) return;
+            
             const choco = document.createElement('div');
             choco.className = `chocolate ${isBomb ? 'bomb' : 'good'}`;
             const leftPos = Math.random() * 75 + 12;
             choco.style.left = leftPos + '%';
             const speed = isBomb ? 2.0 + Math.random() * 0.5 : 2.5 + Math.random() * 0.8;
             choco.style.animationDuration = speed + 's';
+            
             const inner = document.createElement('div');
             inner.className = 'chocolate-inner';
             choco.appendChild(inner);
+            
+            choco.addEventListener('click', () => catchChocolateByElement(choco));
+            
             gameArea.appendChild(choco);
-            const chocoData = { element: choco, left: leftPos, isBomb, 
+            
+            const chocoData = { 
+                element: choco, 
+                left: leftPos, 
+                isBomb, 
                 timeout: setTimeout(() => {
-                    if (choco.parentNode && gameActive && !choco.classList.contains('explode') && !gameWon) {
-                        if (!chocoData.isBomb) loseLife();
-                        choco.remove();
-                        chocolates = chocolates.filter(c => c.element !== choco);
+                    removeChocolate(chocoData);
+                    if (!chocoData.isBomb && gameActive && !gameWon) {
+                        loseLife();
                     }
                 }, speed * 1000 + 100)
             };
             chocolates.push(chocoData);
         }
 
+        function catchChocolateByElement(choco) {
+            const chocoData = chocolates.find(c => c.element === choco);
+            if (!chocoData) return;
+            catchChocolate(chocoData);
+        }
+
         function catchChocolate(chocoData) {
+            if (!gameActive || gameWon || chocoData.processed) return;
+            chocoData.processed = true;
+            
             const choco = chocoData.element;
-            if (!gameActive || gameWon || choco.classList.contains('explode') || !choco.parentNode) return;
             choco.classList.add('explode');
             const x = chocoData.left * (gameArea.offsetWidth / 100);
             
@@ -478,6 +539,10 @@
                 catMouth.style.animation = 'shockNom 0.4s ease-in-out';
                 lives = Math.max(0, lives - 1);
                 createShockwave(x, 350);
+                updateLivesDisplay();
+                if (lives <= 0) {
+                    setTimeout(() => gameOver(), 500);
+                }
             } else {
                 playNomNom();
                 catMouth.style.animation = 'nomNom 0.3s ease-in-out';
@@ -487,21 +552,27 @@
                 if (score >= 250 && !pinkMode) {
                     pinkMode = true;
                     body.classList.add('pink-mode');
-                    gameAreaEl.classList.add('pink-mode');
+                    gameArea.classList.add('pink-mode');
                     createBrownSpecks();
                 }
                 
-                if (score >= 500) { perfectScoreAchieved(); return; }
+                if (score >= 500) { 
+                    perfectScoreAchieved(); 
+                    return; 
+                }
                 createParticles(x, 350);
                 createHearts(x, 350);
             }
             
-            livesEl.innerHTML = '❤️'.repeat(lives) + ' ☠️'.repeat(3 - lives) + ` Lives: ${lives}`;
+            removeChocolate(chocoData);
+        }
+
+        function removeChocolate(chocoData) {
             clearTimeout(chocoData.timeout);
-            setTimeout(() => {
-                if (choco.parentNode) choco.remove();
-                chocolates = chocolates.filter(c => c.element !== choco);
-            }, 600);
+            if (chocoData.element && chocoData.element.parentNode) {
+                chocoData.element.remove();
+            }
+            chocolates = chocolates.filter(c => c.element !== chocoData.element);
         }
 
         function createBrownSpecks() {
@@ -518,19 +589,22 @@
             }
         }
 
-        function loseLife() {
-            if (gameWon) return;
-            lives--;
+        function updateLivesDisplay() {
             livesEl.innerHTML = '❤️'.repeat(lives) + ' ☠️'.repeat(3 - lives) + ` Lives: ${lives}`;
-            if (lives <= 0) gameOver();
+        }
+
+        function loseLife() {
+            if (gameWon || !gameActive) return;
+            lives--;
+            updateLivesDisplay();
+            if (lives <= 0) {
+                setTimeout(() => gameOver(), 500);
+            }
         }
 
         function perfectScoreAchieved() {
-            gameWon = true; gameActive = false;
-            if (spawnTimer) clearInterval(spawnTimer);
-            cancelAnimationFrame(gameLoopId);
-            chocolates.forEach(c => { clearTimeout(c.timeout); if (c.element && c.element.parentNode) c.element.remove(); });
-            chocolates = [];
+            stopGame();
+            cleanupChocolates();
             perfectScoreEl.style.display = 'block';
         }
 
@@ -567,14 +641,17 @@
 
         function gameLoop() {
             if (!gameActive || gameWon) return;
+            
             for (let i = chocolates.length - 1; i >= 0; i--) {
                 const chocoData = chocolates[i];
-                const choco = chocoData.element;
-                if (!choco.parentNode || choco.classList.contains('explode')) {
-                    chocolates.splice(i, 1); continue;
+                if (!chocoData || chocoData.processed || !chocoData.element || !chocoData.element.parentNode) {
+                    chocolates.splice(i, 1);
+                    continue;
                 }
+                
                 const catRect = catMouth.getBoundingClientRect();
-                const chocoRect = choco.getBoundingClientRect();
+                const chocoRect = chocoData.element.getBoundingClientRect();
+                
                 if (chocoRect.bottom > catRect.top && chocoRect.bottom < catRect.bottom + 25 &&
                     chocoRect.right > catRect.left && chocoRect.left < catRect.right &&
                     Math.abs(chocoData.left - catX) < 12) {
@@ -586,9 +663,8 @@
 
         function gameOver() {
             if (gameWon) return;
-            gameActive = false;
-            if (spawnTimer) clearInterval(spawnTimer);
-            cancelAnimationFrame(gameLoopId);
+            stopGame();
+            cleanupChocolates();
             finalScoreEl.textContent = score;
             if (score >= 100) {
                 gameOverTitleEl.textContent = '🍫 TOO MUCH CHOCOLATE! 😻';
@@ -601,23 +677,12 @@
         }
 
         function restartGame() {
-            if (gameWon) return;
-            gameActive = true; gameWon = false;
-            score = 0; lives = 3; pinkMode = false;
-            body.classList.remove('pink-mode');
-            gameAreaEl.classList.remove('pink-mode');
-            chocolates.forEach(c => { clearTimeout(c.timeout); if (c.element && c.element.parentNode) c.element.remove(); });
-            chocolates = [];
-            scoreEl.textContent = 0;
-            livesEl.innerHTML = '❤️❤️❤️ Lives: 3';
+            stopGame();
+            cleanupChocolates();
             gameOverEl.style.display = 'none';
             perfectScoreEl.style.display = 'none';
-            catX = 50;
-            catMouth.style.left = '50%';
-            catMouth.style.animation = '';
+            resetGameState();
             playButton.style.display = 'block';
-            gameActive = false;
-            gameLoop();
         }
 
         window.addEventListener('click', initAudio, { once: true });
