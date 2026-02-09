@@ -101,17 +101,17 @@
 
         #message {
             margin-top: 25px;
-            font-size: 28px;
+            font-size: 26px;
             color: #fff;
             font-weight: bold;
-            text-shadow: 2px 2px 6px rgba(0,0,0,0.5);
+            text-shadow: 2px 2px 6px rgba(0,0,0,0.8);
             opacity: 0;
-            transform: scale(0.8) translateY(20px);
-            transition: all 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            transform: scale(0.9) translateY(15px);
+            transition: all 1.2s cubic-bezier(0.68, -0.55, 0.265, 1.55);
         }
         #message.show {
             opacity: 1;
-            transform: scale(1.05) translateY(0);
+            transform: scale(1) translateY(0);
         }
 
         .final-state {
@@ -151,7 +151,7 @@
             position: fixed;
             font-size: 30px;
             pointer-events: none;
-            animation: floatUp 3s linear forwards;
+            animation: floatUp 4s linear forwards;
             z-index: 20;
         }
         @keyframes floatUp {
@@ -169,7 +169,7 @@
     <div class="teddy-container" id="normalState">
         <div class="teddy-emoji" id="teddy">🧸</div>
         <button id="hug-btn">🤗 Give Me a Hug!</button>
-        <div id="message">Click for hugs! 🧸💖</div>
+        <div id="message">Click BUTTON for hugs! 🧸💖</div>
     </div>
 
     <div class="final-state" id="finalState">
@@ -187,7 +187,6 @@
                 this.finalState = document.getElementById('finalState');
                 
                 this.hugCount = 0;
-                this.maxHugs = 8;
                 
                 this.wishes = [
                     '🥰 Squeeeeze tight!',
@@ -197,14 +196,12 @@
                     '🤤 You\'re my favorite teddy!',
                     '🤓💋💋💋🫠🫠🫠❤️😘😘😘😘',
                     '✋ okay now stop',
-                    '❌ No more hugs for teddy 🧸'
+                    '🛑 I said stoppp 😤',
+                    '❌ No more hugs for za teddy 🧸'
                 ];
 
                 this.initStars();
                 this.bindEvents();
-                
-                // Auto-trigger first hug
-                setTimeout(() => this.triggerHug(), 1000);
             }
 
             initStars() {
@@ -220,26 +217,28 @@
             }
 
             bindEvents() {
-                this.teddy.addEventListener('click', () => this.triggerHug());
                 this.btn.addEventListener('click', () => this.triggerHug());
+                this.teddy.addEventListener('click', () => this.teddyHugOnly());
             }
 
             playHugSound() {
-                const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-                const osc = audioCtx.createOscillator();
-                const gain = audioCtx.createGain();
-                
-                osc.type = 'triangle';
-                osc.frequency.setValueAtTime(800, audioCtx.currentTime);
-                osc.frequency.exponentialRampToValueAtTime(400, audioCtx.currentTime + 0.15);
-                
-                gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
-                gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.2);
-                
-                osc.connect(gain);
-                gain.connect(audioCtx.destination);
-                osc.start();
-                osc.stop(audioCtx.currentTime + 0.2);
+                try {
+                    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                    const osc = audioCtx.createOscillator();
+                    const gain = audioCtx.createGain();
+                    
+                    osc.type = 'triangle';
+                    osc.frequency.setValueAtTime(800, audioCtx.currentTime);
+                    osc.frequency.exponentialRampToValueAtTime(400, audioCtx.currentTime + 0.15);
+                    
+                    gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.2);
+                    
+                    osc.connect(gain);
+                    gain.connect(audioCtx.destination);
+                    osc.start();
+                    osc.stop(audioCtx.currentTime + 0.2);
+                } catch(e) {}
             }
 
             createHeartExplosion() {
@@ -254,33 +253,38 @@
                 heart.className = 'heart';
                 heart.style.left = (Math.random() * 80 + 10) + 'vw';
                 document.body.appendChild(heart);
-                setTimeout(() => heart.remove(), 3000);
+                setTimeout(() => heart.remove(), 4000);
+            }
+
+            teddyHugOnly() {
+                this.playHugSound();
+                this.teddy.classList.add('hugging');
+                this.createHeartExplosion();
+                setTimeout(() => {
+                    this.teddy.classList.remove('hugging');
+                }, 1200);
             }
 
             triggerHug() {
-                if (this.hugCount >= this.maxHugs) return;
+                if (this.hugCount >= 9) return; // Block after 9th
                 
                 this.hugCount++;
                 
                 this.playHugSound();
-                
-                // Update message BEFORE animation
                 this.message.textContent = this.wishes[Math.min(this.hugCount - 1, this.wishes.length - 1)];
                 this.message.classList.add('show');
-                
-                // Teddy hug animation
                 this.teddy.classList.add('hugging');
                 this.createHeartExplosion();
                 
-                // Reset animation
                 setTimeout(() => {
                     this.teddy.classList.remove('hugging');
                     this.message.classList.remove('show');
                     
-                    if (this.hugCount >= this.maxHugs) {
-                        this.showFinalState();
+                    // Show final state ONLY on 9th click
+                    if (this.hugCount === 9) {
+                        setTimeout(() => this.showFinalState(), 500);
                     }
-                }, 1800);
+                }, 4500);
             }
 
             showFinalState() {
