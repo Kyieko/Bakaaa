@@ -1,1 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Promise Day ❤️ - Valentine's Week</title>
+    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap" rel="stylesheet" />
+    <style>
+        body {
+            background: linear-gradient(135deg, #fff0f5, #ff69b4);
+            font-family: 'Segoe UI', Tahoma, sans-serif;
+            text-align: center;
+            overflow: hidden;
+            position: relative;
+            padding-top: 20px; /* Even higher up */
+            margin: 0;
+            height: 100vh;
+        }
+        h1 {
+            font-size: 2.8em; /* Slightly smaller */
+            color: #d63384;
+            font-family: 'Great Vibes', cursive;
+            margin-bottom: 5px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        .promise-section {
+            max-width: 650px;
+            margin: 0 auto;
+            padding: 5px 15px;
+        }
+        .promise-btn {
+            background: #ff69b4;
+            color: white;
+            border: none;
+            padding: 18px 35px;
+            font-size: 1.4em;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 8px 20px rgba(255,105,180,0.4);
+            transition: all 0.3s ease;
+            margin: 10px;
+            position: relative;
+            z-index: 10;
+        }
+        .promise-btn:hover {
+            background: #ff85c1;
+            transform: scale(1.05);
+        }
+        .ps-btn {
+            background: #ff69b4;
+            color: white;
+            border: none;
+            padding: 10px 25px;
+            font-size: 1em;
+            border-radius: 25px;
+            cursor: pointer;
+            box-shadow: 0 6px 15px rgba(255,105,180,0.4);
+            transition: all 0.3s ease;
+            margin-top: 10px;
+            display: none;
+            font-weight: bold;
+        }
+        .ps-btn:hover {
+            background: #ff85c1;
+            transform: scale(1.05);
+        }
+        .promise-message {
+            font-family: 'Great Vibes', cursive;
+            font-size: 1.9em; /* Smaller for perfect fit */
+            color: #d63384;
+            display: none;
+            margin: 10px auto 0;
+            max-width: 95%;
+            max-height: 65vh; /* Limit height */
+            line-height: 1.25;
+            animation: fadeIn 1s ease-in;
+            padding: 0 15px;
+            overflow-y: auto; /* Scroll if needed */
+            text-align: left; /* Better for long text */
+            text-align: center; /* Center for beauty */
+        }
+        .side-note-overlay {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 25px;
+            border-radius: 25px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+            font-size: 1.3em;
+            color: #ff1493;
+            font-weight: 500; /* Normal font weight */
+            font-family: 'Segoe UI', Tahoma, sans-serif; /* NORMAL FONT */
+            max-width: 90vw;
+            max-height: 70vh;
+            overflow-y: auto;
+            display: none;
+            z-index: 1000;
+            animation: popIn 0.5s ease-out;
+            border: 3px solid #ff69b4;
+            line-height: 1.4;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes popIn {
+            from { opacity: 0; transform: translate(-50%, -60%) scale(0.8); }
+            to { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+        }
+        .hidden { display: none; }
+        /* Floating Hearts */
+        .heart {
+            position: absolute;
+            width: 25px;
+            height: 25px;
+            background: #ff69b4;
+            transform: rotate(45deg);
+            animation: float 8s infinite linear;
+            opacity: 0.8;
+        }
+        .heart::before,
+        .heart::after {
+            content: '';
+            position: absolute;
+            width: 25px;
+            height: 25px;
+            background: #ff69b4;
+            border-radius: 50%;
+        }
+        .heart::before { top: -12px; left: 0; }
+        .heart::after { left: -12px; top: 0; }
+        @keyframes float {
+            0% { transform: translateY(100vh) rotate(45deg); opacity: 0; }
+            10% { opacity: 0.8; }
+            90% { opacity: 0.8; }
+            100% { transform: translateY(-100px) rotate(45deg); opacity: 0; }
+        }
+        @media (max-width: 768px) {
+            body { padding-top: 10px; }
+            h1 { font-size: 2.2em; }
+            .promise-message { 
+                font-size: 1.5em; 
+                max-height: 60vh;
+                padding: 0 10px;
+            }
+            .side-note-overlay { font-size: 1.1em; padding: 20px; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Floating Hearts Background -->
+    <script>
+        for (let i = 0; i < 30; i++) {
+            const heart = document.createElement('div');
+            heart.classList.add('heart');
+            heart.style.left = Math.random() * 100 + 'vw';
+            heart.style.animationDuration = (5 + Math.random() * 5) + 's';
+            heart.style.animationDelay = Math.random() * 5 + 's';
+            document.body.appendChild(heart);
+        }
+    </script>
 
+    <div class="promise-section">
+        <h1>💕 Promise Day 💕</h1>
+        <p style="font-size: 1.1em; color: #333; margin-bottom: 15px;">This isn't just a promise day thing but something I want to promise to myself too❤️</p>
+        
+        <div id="promiseBlock">
+            <button class="promise-btn" onclick="makePromise()">Please don't cringe🤓</button>
+        </div>
+        
+        <div id="promiseReveal" class="promise-message">
+            "I promise to keep choosing YOU, even on the boring days.
+I don't really believe in big Promise Day gestures, but I do believe in showing up, being honest, and not taking what we have for granted. So this is me saying- I'm really glad it's you. I'm excited to keep building something with you, step by step even through the normal, quiet days that don't look special but matter just as much.
+
+I promise to love you with care, to be there as best as I can, and to keep choosing you again and again, every day Not because I have to, but because I want to. 💖
+I love yu Baka 😘"
+        </div>
+
+        <button id="psButton" class="ps-btn" onclick="toggleSideNote()">P.S. 😏</button>
+    </div>
+
+    <div id="sideNoteOverlay" class="side-note-overlay">
+        "I wanna make u my WIFU this LIFU so yu better be communicating with me instead of getting mad/annoyed at me all za time" 😘
+    </div>
+
+    <script>
+        function makePromise() {
+            document.getElementById('promiseBlock').classList.add('hidden');
+            document.getElementById('promiseReveal').style.display = 'block';
+            document.getElementById('psButton').style.display = 'inline-block';
+            // Extra hearts burst on promise
+            for (let i = 0; i < 20; i++) {
+                setTimeout(() => {
+                    const burstHeart = document.createElement('div');
+                    burstHeart.classList.add('heart');
+                    burstHeart.style.position = 'fixed';
+                    burstHeart.style.left = '50%';
+                    burstHeart.style.top = '50%';
+                    burstHeart.style.transform = 'translate(-50%, -50%) rotate(45deg)';
+                    burstHeart.style.animation = 'float 2s linear forwards';
+                    document.body.appendChild(burstHeart);
+                    setTimeout(() => burstHeart.remove(), 2000);
+                }, i * 100);
+            }
+        }
+
+        function toggleSideNote() {
+            const overlay = document.getElementById('sideNoteOverlay');
+            if (overlay.style.display === 'block') {
+                overlay.style.display = 'none';
+            } else {
+                overlay.style.display = 'block';
+            }
+        }
+    </script>
+</body>
+</html>
