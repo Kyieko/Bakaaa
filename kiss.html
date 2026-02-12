@@ -1,1 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>No Kisses 😒</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
 
+<body>
+
+<!-- floating annoyed emojis -->
+<div class="floaters">
+  <span>😒</span>
+  <span>🙄</span>
+  <span>😤</span>
+  <span>😑</span>
+  <span>😒</span>
+  <span>🙄</span>
+</div>
+
+<div class="card">
+  <h1>🚫 No Kisses For You</h1>
+
+  <p class="sentence first">
+    <span>No</span>
+    <span>kisses</span>
+    <span>for</span>
+    <span>you</span>
+  </p>
+
+  <p class="sentence second">
+    <span>cuz</span>
+    <span>apparently</span>
+    <span>I</span>
+    <span>am</span>
+    <span>annoying</span>
+    <span>😒</span>
+  </p>
+</div>
+
+<style>
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: linear-gradient(135deg, #ff9a9e, #fad0c4);
+  overflow-x: hidden;
+}
+
+/* main card */
+.card {
+  max-width: 320px;
+  margin: 100px auto;
+  background: rgba(255,255,255,0.95);
+  border-radius: 22px;
+  padding: 30px 22px;
+  text-align: center;
+  box-shadow: 0 20px 45px rgba(0,0,0,0.25);
+  position: relative;
+  z-index: 2;
+}
+
+/* heading */
+h1 {
+  margin-top: 0;
+  color: #d6336c;
+}
+
+/* sentence */
+.sentence {
+  font-size: 18px;
+  margin: 14px 0;
+}
+
+/* word animation */
+.sentence span {
+  opacity: 0;
+  display: inline-block;
+  margin-right: 6px; /* 👈 IMPORTANT: space between words */
+  transform: translateY(12px);
+  animation: wordIn 0.45s ease forwards;
+}
+
+/* FIRST LINE timing */
+.first span:nth-child(1) { animation-delay: 0.4s; }
+.first span:nth-child(2) { animation-delay: 0.8s; }
+.first span:nth-child(3) { animation-delay: 1.2s; }
+.first span:nth-child(4) { animation-delay: 1.6s; }
+
+/* SECOND LINE timing (starts AFTER first line) */
+.second span:nth-child(1) { animation-delay: 2.4s; }
+.second span:nth-child(2) { animation-delay: 2.8s; }
+.second span:nth-child(3) { animation-delay: 3.2s; }
+.second span:nth-child(4) { animation-delay: 3.6s; }
+.second span:nth-child(5) { animation-delay: 4.0s; }
+.second span:nth-child(6) { animation-delay: 4.4s; }
+
+@keyframes wordIn {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* floating annoyed emojis */
+.floaters {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.floaters span {
+  position: absolute;
+  bottom: -40px;
+  font-size: 24px;
+  animation: floatUp linear infinite;
+  opacity: 0.8;
+}
+
+.floaters span:nth-child(1) { left: 12%; animation-duration: 7s; }
+.floaters span:nth-child(2) { left: 28%; animation-duration: 9s; }
+.floaters span:nth-child(3) { left: 44%; animation-duration: 6s; }
+.floaters span:nth-child(4) { left: 60%; animation-duration: 8s; }
+.floaters span:nth-child(5) { left: 76%; animation-duration: 10s; }
+.floaters span:nth-child(6) { left: 90%; animation-duration: 7s; }
+
+@keyframes floatUp {
+  0% { transform: translateY(0); opacity: 0; }
+  20% { opacity: 0.9; }
+  100% { transform: translateY(-110vh); opacity: 0; }
+}
+</style>
+
+</body>
+</html>
