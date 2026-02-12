@@ -52,7 +52,6 @@
       line-height: 1.3;
     }
 
-    /* YAY excitement animation */
     @keyframes yayBounce {
       0%, 20%, 50%, 80%, 100% { transform: translateY(0) scale(1); }
       40% { transform: translateY(-20px) scale(1.05); }
@@ -110,7 +109,6 @@
       color: #999;
     }
 
-    /* Sobbing animation */
     @keyframes sob {
       0%, 100% { transform: translateY(0px) scale(1); }
       25% { transform: translateY(-2px) scale(1.02); }
@@ -130,6 +128,7 @@
       border-radius: 15px;
       overflow: hidden;
       box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+      pointer-events: none;
     }
 
     .gif-container iframe {
@@ -144,7 +143,6 @@
       margin: 10px 0;
     }
 
-    /* Enhanced Heart particles for background */
     @keyframes hearts {
       0% { transform: translateY(0) scale(0) rotate(0deg); opacity: 1; }
       100% { transform: translateY(-120vh) scale(1.2) rotate(360deg); opacity: 0; }
@@ -176,7 +174,7 @@
     <h1>Bakaaaa 🥺<br>Will you be my Valentine? 👉🏻👈🏻</h1>
 
     <div class="buttons">
-      <button id="yesBtn" aria-label="Yes, I'll be your Valentine">Yes 💖</button>
+      <button id="yesBtn" aria-label="Yes, I'll be my Valentine">Yes 💖</button>
       <button id="noBtn" aria-label="No">No 💔</button>
     </div>
   </div>
@@ -188,7 +186,6 @@
     const yesBtn = document.getElementById("yesBtn");
     const card = document.getElementById("card");
 
-    // Web Audio API for sobbing sound AND victory love sound
     let audioContext;
     function initAudio() {
       if (!audioContext) {
@@ -200,46 +197,34 @@
       initAudio();
       const oscillator = audioContext.createOscillator();
       const gainNode = audioContext.createGain();
-      
       oscillator.connect(gainNode);
       gainNode.connect(audioContext.destination);
-      
       oscillator.frequency.setValueAtTime(pitch, audioContext.currentTime);
       oscillator.frequency.exponentialRampToValueAtTime(pitch * 0.7, audioContext.currentTime + duration);
-      
       gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
       gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + duration);
-      
       oscillator.start(audioContext.currentTime);
       oscillator.stop(audioContext.currentTime + duration);
     }
 
-    // ✨ VICTORY LOVE SOUND ✨ - Magical ascending chimes + sparkles
     function playVictoryLoveSound() {
       initAudio();
-      
-      // 5 magical ascending notes (like victory fanfare)
-      const notes = [523, 659, 784, 988, 1047]; // C5, E5, G5, B5, C6
+      const notes = [523, 659, 784, 988, 1047];
       notes.forEach((freq, index) => {
         setTimeout(() => {
           const oscillator = audioContext.createOscillator();
           const gainNode = audioContext.createGain();
-          
           oscillator.connect(gainNode);
           gainNode.connect(audioContext.destination);
-          
-          oscillator.type = 'sine'; // Beautiful bell-like tone
+          oscillator.type = 'sine';
           oscillator.frequency.setValueAtTime(freq, audioContext.currentTime);
-          
           gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
           gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.4);
-          
           oscillator.start(audioContext.currentTime);
           oscillator.stop(audioContext.currentTime + 0.4);
         }, index * 100);
       });
-      
-      // Add sparkle/trill effect after main melody
+
       setTimeout(() => {
         for (let i = 0; i < 6; i++) {
           setTimeout(() => {
@@ -269,13 +254,9 @@
     }
 
     yesBtn.onclick = function () {
-      // 🎵 PLAY VICTORY LOVE SOUND FIRST
       playVictoryLoveSound();
-      
-      // Add pulsing heart background
       document.body.classList.add('yes-bg');
-      
-      // Create continuous hearts for 10 seconds
+
       for (let i = 0; i < 30; i++) {
         setTimeout(() => {
           for (let j = 0; j < 3; j++) {
@@ -296,10 +277,8 @@
     function handleNoInteraction() {
       noClicks++;
       
-      // Play sobbing sound with varying pitch
       playSobSound(600 + Math.random() * 400, 0.25 + Math.random() * 0.15);
       
-      // Add sobbing animation
       noBtn.classList.add('sobbing');
       setTimeout(() => noBtn.classList.remove('sobbing'), 400);
       
@@ -317,14 +296,13 @@
         noBtn.style.top = y + 'px';
         noBtn.style.zIndex = '10';
         noBtn.style.width = 'auto';
-
       } else if (noClicks === MAX_CLICKS) {
-        // Final sad sob
         playSobSound(400, 0.5);
         noBtn.style.transform = 'scale(0.2)';
         noBtn.style.opacity = '0.5';
         noBtn.classList.add('final');
         noBtn.textContent = '😢';
+
         setTimeout(() => {
           card.innerHTML = `
             <h1>Why Babeee?... 🥺💔</h1>
@@ -340,6 +318,5 @@
     noBtn.addEventListener("mouseover", handleNoInteraction);
     noBtn.addEventListener("click", handleNoInteraction);
   </script>
-
 </body>
 </html>
