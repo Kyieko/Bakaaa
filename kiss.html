@@ -34,7 +34,7 @@
   </p>
 
   <div class="apology-zone" id="apologyZone">
-    Only click if yu don't find me annoying 🤧 
+    💕 Only click if I'm your fave cutie 🤗 
   </div>
 </div>
 
@@ -42,7 +42,7 @@
 <div class="kiss-page" id="kissPage">
   <div class="kiss-card">
     <h2>💋 I miss kissing you</h2>
-    <p>I’d kiss you all day if I could</p>
+    <p>I'd kiss you all day if I could</p>
 
     <!-- LOCAL GIF -->
     <img src="kiss.gif" alt="kiss gif" class="kiss-gif">
@@ -101,22 +101,60 @@ h1 {
   to { opacity:1; transform:translateY(0) scale(1); }
 }
 
-/* APOLOGY BUTTON */
+/* CUTE APOLOGY BUTTON - MOVED DOWN & CUTER */
 .apology-zone {
-  margin-top: 24px;
-  padding: 14px 22px;
-  background: linear-gradient(135deg,#ff69b4,#ff1493);
-  color: white;
-  border-radius: 25px;
-  font-weight: bold;
+  margin-top: 40px; /* Increased from 24px - moves it down */
+  padding: 18px 28px; /* Slightly larger padding */
+  background: linear-gradient(135deg, #ffb6c1, #ff69b4, #ffc0cb); /* Softer pink gradient */
+  color: #fff;
+  border-radius: 32px; /* Rounder corners */
+  font-weight: 600;
+  font-size: 15px; /* Slightly larger text */
   cursor: pointer;
   opacity: 0;
-  transform: scale(.8);
-  animation: reveal .8s ease 5.8s forwards;
+  transform: scale(.75) rotate(-2deg); /* Smaller scale + cute tilt */
+  animation: cuteReveal 1s cubic-bezier(0.68, -0.55, 0.265, 1.55) 5.8s forwards;
+  box-shadow: 0 12px 30px rgba(255, 105, 180, 0.4), 0 4px 12px rgba(0,0,0,0.1); /* Glowy shadow */
+  border: 3px solid rgba(255,255,255,0.8); /* Cute white border */
+  position: relative;
+  overflow: hidden;
 }
 
-@keyframes reveal {
-  to { opacity:1; transform:scale(1); }
+.apology-zone::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(45deg, transparent, rgba(255,255,255,0.4), transparent);
+  transform: rotate(45deg);
+  transition: opacity 0.3s;
+  opacity: 0;
+}
+
+.apology-zone:hover::before {
+  animation: shine 1.5s infinite;
+}
+
+@keyframes shine {
+  0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); opacity: 0; }
+  50% { opacity: 1; }
+  100% { transform: translateX(100%) translateY(100%) rotate(45deg); opacity: 0; }
+}
+
+@keyframes cuteReveal {
+  0% { 
+    opacity: 0; 
+    transform: scale(.75) rotate(-2deg); 
+  }
+  50% { 
+    transform: scale(1.05) rotate(1deg); 
+  }
+  100% { 
+    opacity: 1; 
+    transform: scale(1) rotate(0deg); 
+  }
 }
 
 /* FLOATING EMOJIS */
