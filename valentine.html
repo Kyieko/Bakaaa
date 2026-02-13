@@ -161,11 +161,11 @@ p {
       class="gif"
     >
 
-    <button class="btn" onclick="next()">💖</button>
+    <button class="btn" onclick="next()">annndddd💖</button>
   </div>
 </div>
 
-<!-- SCREEN 4 (GIF ADDED) -->
+<!-- SCREEN 4 (UNCHANGED) -->
 <div class="screen hidden" id="s4">
   <div class="card">
     <p>Anddd I've been in love</p>
@@ -178,11 +178,11 @@ p {
       class="gif"
     >
 
-    <button class="btn" onclick="next()">Almost there 💫</button>
+    <button class="btn" onclick="next()"> 🫠🫠🫠🫠🫠 💫</button>
   </div>
 </div>
 
-<!-- SCREEN 5 (FINAL - UNCHANGED) -->
+<!-- SCREEN 5 (FINAL - GIF ADDED) -->
 <div class="screen hidden" id="s5">
   <div class="card">
     <div class="big-heart">💖</div>
@@ -190,6 +190,12 @@ p {
       Happy Valentine's Day<br>
       Babbeeeee 💋
     </p>
+
+    <img 
+      src="https://media.giphy.com/media/yzQ6Q5JqnoNAPVFA5N/giphy.gif" 
+      alt="love you babe ggmeow gif"
+      class="gif"
+    >
   </div>
 </div>
 
@@ -199,6 +205,7 @@ let current = 1;
 function next() {
   document.getElementById("s" + current).classList.add("hidden");
   current++;
+  if (current > 5) current = 5; // Stay on final screen
   document.getElementById("s" + current).classList.remove("hidden");
 }
 
