@@ -10,11 +10,12 @@
 <!-- Floating background -->
 <div class="floating"></div>
 
-<!-- DVD-style floating text -->
+<!-- DVD-style floating GIF -->
 <div id="dvdText">
-  Happy Valentine’s Day 💖<br>
-  my lovbbveee<br>
-  💋😘😘💋💋😘 🫦
+  <img 
+    src="https://media.giphy.com/media/26FLdmIp6wJr91JAI/giphy.gif"
+    alt="Valentine GIF"
+  >
 </div>
 
 <h1>
@@ -120,22 +121,23 @@ h1 {
   to { transform: translateY(-120vh); opacity: 0; }
 }
 
-/* 💜 DVD floating text */
+/* 💜 DVD floating GIF */
 #dvdText {
   position: fixed;
   top: 40px;
   left: 40px;
-  text-align: center;
-  font-size: 18px;
-  font-weight: bold;
-  line-height: 1.3;
-  color: #FFF0F5;
-  padding: 12px 18px;
+  padding: 10px;
   background: linear-gradient(135deg, #D8B4E2, #C084FC);
   border-radius: 22px;
   box-shadow: 0 10px 25px rgba(192,132,252,0.6);
   z-index: 4;
   pointer-events: none;
+}
+
+#dvdText img {
+  width: 120px;   /* increased size */
+  height: auto;
+  border-radius: 14px;
 }
 </style>
 
@@ -176,7 +178,7 @@ document.addEventListener("click", e => {
   }
 });
 
-/* DVD-style floating text movement */
+/* DVD-style floating movement */
 const dvd = document.getElementById("dvdText");
 let x = 40, y = 40;
 let dx = 1.1, dy = 1.1;
